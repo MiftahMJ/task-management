@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .task-form {
+            width: 50%;
+        }
+        .task-list {
+            width: 40%;
+            border-left: 1px solid #ccc;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="task-form">
+        <h2>Add a New Task</h2>
+        <form action="/add-task" method="POST">
+            <label for="title">Task Title:</label>
+            <input type="text" id="title" name="title" required><br><br>
+
+            <label for="description">Task Description:</label><br>
+            <textarea id="description" name="description" required></textarea><br><br>
+
+            <label for="due_date">Due Date:</label>
+            <input type="date" id="due_date" name="due_date" required><br><br>
+
+            <label for="due_time">Due Time:</label>
+            <input type="time" id="due_time" name="due_time" required><br><br>
+
+            <input type="checkbox" id="repeat" name="repeat">
+            <label for="repeat">Repeat Task</label><br><br>
+
+            <label for="repeat_date">Repeat Date:</label>
+            <input type="date" id="repeat_date" name="repeat_date"><br><br>
+
+            <label for="repeat_time">Repeat Time:</label>
+            <input type="time" id="repeat_time" name="repeat_time"><br><br>
+
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+
+<div class="task-list">
+    <h2>Pending Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+        {% if not task.completed %}
+        <li>
+            <strong>{{ task.title }}</strong> - {{ task.due_date }} at {{ task.due_time }}
+            {% if task.is_overdue() %}
+                <span style="color: red;">(Overdue by {{ task.overdue_counter }} days)</span>
+            {% endif %}
+            <form action="/complete-task/{{ loop.index0 }}" method="POST" style="display:inline;">
+                <button type="submit">Mark Complete</button>
+            </form>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+
+</body>
+</html>
